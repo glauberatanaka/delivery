@@ -1,4 +1,6 @@
-﻿using Delivery.Infrastructure.Identity;
+﻿using Delivery.Core.Entities;
+using Delivery.Core.Entities.ProdutoAggregate;
+using Delivery.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +13,8 @@ namespace Delivery.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+
+        DbSet<Produto> Produtos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

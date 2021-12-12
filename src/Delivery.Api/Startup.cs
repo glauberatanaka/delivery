@@ -1,4 +1,7 @@
+using Autofac;
+using Delivery.Core;
 using Delivery.Infrastructure.Installers;
+using Delivery.Infrastructure.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,9 +20,12 @@ namespace Delivery.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -27,20 +33,27 @@ namespace Delivery.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var installers = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(t => typeof(IInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                .Select(Activator.CreateInstance)
-                .Cast<IInstaller>()
-                .ToList(); ;
+            services.InstallServicesFromAssembly(Configuration);
+            //var installers = AppDomain.CurrentDomain.GetAssemblies()
+            //    .SelectMany(s => s.GetTypes())
+            //    .Where(t => typeof(IInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+            //    .Select(Activator.CreateInstance)
+            //    .Cast<IInstaller>()
+            //    .ToList(); ;
 
-            installers.ForEach(installer => installer.InstallServices(services, Configuration));
+            //installers.ForEach(installer => installer.InstallServices(services, Configuration));
 
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Delivery.Api", Version = "v1" });
-            });
+            //services.AddControllers();
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Delivery.Api", Version = "v1" });
+            //});
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new DefaultCoreModule());
+            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
