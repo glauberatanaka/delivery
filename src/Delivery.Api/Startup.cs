@@ -1,20 +1,11 @@
 using Autofac;
 using Delivery.Core;
-using Delivery.Infrastructure.Installers;
 using Delivery.Infrastructure.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Delivery.Api
 {
@@ -34,20 +25,6 @@ namespace Delivery.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServicesFromAssembly(Configuration);
-            //var installers = AppDomain.CurrentDomain.GetAssemblies()
-            //    .SelectMany(s => s.GetTypes())
-            //    .Where(t => typeof(IInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-            //    .Select(Activator.CreateInstance)
-            //    .Cast<IInstaller>()
-            //    .ToList(); ;
-
-            //installers.ForEach(installer => installer.InstallServices(services, Configuration));
-
-            //services.AddControllers();
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Delivery.Api", Version = "v1" });
-            //});
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
