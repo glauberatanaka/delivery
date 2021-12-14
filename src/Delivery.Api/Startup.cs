@@ -1,11 +1,17 @@
-using Autofac;
 using Delivery.Core;
+using Delivery.Infrastructure.Data;
+using Delivery.Infrastructure.Identity;
 using Delivery.Infrastructure.Modules;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Delivery.Api
 {
@@ -27,12 +33,6 @@ namespace Delivery.Api
             services.InstallServicesFromAssembly(Configuration);
         }
 
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterModule(new DefaultCoreModule());
-            builder.RegisterModule(new DefaultInfrastructureModule(_env.EnvironmentName == "Development"));
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -46,6 +46,8 @@ namespace Delivery.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

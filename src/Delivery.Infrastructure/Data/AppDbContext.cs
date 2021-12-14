@@ -1,6 +1,7 @@
 ﻿using Delivery.Core.Entities;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +9,7 @@ using System.Reflection;
 
 namespace Delivery.Infrastructure.Data
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+    public class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

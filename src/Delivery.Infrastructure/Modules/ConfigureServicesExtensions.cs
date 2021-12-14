@@ -17,7 +17,7 @@ namespace Delivery.Infrastructure.Modules
                 .Where(t => typeof(IInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
                 .Select(Activator.CreateInstance)
                 .Cast<IInstaller>()
-                .ToList(); ;
+                .ToList();
 
             installers.ForEach(installer => installer.InstallServices(services, configuration));
 

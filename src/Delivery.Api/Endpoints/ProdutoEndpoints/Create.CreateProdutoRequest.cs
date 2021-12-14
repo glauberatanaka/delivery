@@ -2,7 +2,7 @@
 {
     public class CreateProdutoRequest
     {
-        public const string Route = "/Projects";
+        public const string Route = "/Produtos";
 
         public string Nome { get; set; }
         public string Descricao { get; set; }
