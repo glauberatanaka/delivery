@@ -22,7 +22,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
             _mapper = mapper;
         }
 
-        [HttpPost("/Produtos")]
+        [HttpPost("/produto")]
         [SwaggerOperation(
             Summary = "Cria um novo Produto",
             Description = "Cria um novo Produto",
@@ -32,11 +32,13 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
         public override async Task<ActionResult<CreateProdutoResponse>> HandleAsync(
             [FromBody] CreateProdutoRequest request, CancellationToken cancellationToken = default)
         {
-            var newProduto = new Produto(request.Nome, request.Descricao, request.Preco);
+            var response = new CreateProdutoResponse();
+
+            var newProduto = new Produto(request.Nome, request.Descricao, request.Preco, request.QuantidadeEmEstoque);
 
             var createdItem = await _repository.AddAsync(newProduto, cancellationToken);
 
-            var response = _mapper.Map<CreateProdutoResponse>(createdItem);
+            response.Produto = _mapper.Map<ProdutoDTO>(createdItem);
 
             return Ok(response);
         }

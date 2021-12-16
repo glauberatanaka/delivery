@@ -25,12 +25,12 @@ namespace Delivery.Api
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    //var dbContext = services.GetRequiredService<AppDbContext>();
-                    //await AppDbContextSeed.SeedAsync(dbContext, loggerFactory);
+                    var dbContext = services.GetRequiredService<AppDbContext>();
+                    await AppDbContextSeed.SeedAsync(dbContext, loggerFactory);
 
                     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await IdentityDbContextSeed.SeedAsync(userManager, roleManager);
+                    await IdentityDbContextSeed.SeedAsync(userManager, roleManager, dbContext);
                 }
                 catch (Exception ex)
                 {

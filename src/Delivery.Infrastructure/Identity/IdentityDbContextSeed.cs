@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Delivery.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +10,25 @@ namespace Delivery.Infrastructure.Identity
 {
     public class IdentityDbContextSeed
     {
-        public static async Task SeedAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            AppDbContext dbContext)
         {
             await roleManager.CreateAsync(new IdentityRole(Shared.Identity.Constants.Roles.ADMINISTRATORS));
 
-            var defaultUserName = "user@user.com";
-            var defaultUser = new IdentityUser { UserName = defaultUserName, Email = defaultUserName };
-            await userManager.CreateAsync(defaultUser, "User@123");
+            var userCount = dbContext.Users.Count();
+            if (userCount == 0)
+            {
+                var defaultUserName = "user@user.com";
+                var defaultUser = new IdentityUser { UserName = defaultUserName, Email = defaultUserName };
+                await userManager.CreateAsync(defaultUser, "User@123");
 
-            string adminUserName = "admin@admin.com";
-            var adminUser = new IdentityUser { UserName = adminUserName, Email = adminUserName };
-            await userManager.CreateAsync(adminUser, "Admin@123");
-            adminUser = await userManager.FindByNameAsync(adminUserName);
-            await userManager.AddToRoleAsync(adminUser, Shared.Identity.Constants.Roles.ADMINISTRATORS);
+                string adminUserName = "admin@admin.com";
+                var adminUser = new IdentityUser { UserName = adminUserName, Email = adminUserName };
+                await userManager.CreateAsync(adminUser, "Admin@123");
+                adminUser = await userManager.FindByNameAsync(adminUserName);
+                await userManager.AddToRoleAsync(adminUser, Shared.Identity.Constants.Roles.ADMINISTRATORS);
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Delivery.Infrastructure.Data
         {
         }
 
-        DbSet<Produto> Produtos { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

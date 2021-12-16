@@ -9,12 +9,12 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
             RuleFor(x => x.Nome)
                 .NotEmpty();
 
-            RuleFor(x => x.Descricao)
-                .NotEmpty();
-
             RuleFor(x => x.Preco)
                 .NotEmpty()
                 .WithMessage("'Preco' deve ser positivo e maior que zero.");
+
+            RuleFor(x => x.QuantidadeEmEstoque)
+                .NotNull();
         }
     }
 }

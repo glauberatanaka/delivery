@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Delivery.Core.Entities.ProdutoAggregate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,41 +9,25 @@ namespace Delivery.Infrastructure.Data
 {
     public class AppDbContextSeed
     {
-        public static async Task SeedAsync(AppDbContext catalogContext,
+        public static async Task SeedAsync(AppDbContext dbContext,
         ILoggerFactory loggerFactory, int retry = 0)
         {
             var retryForAvailability = retry;
             try
             {
-                //TODO seed
-                //if (catalogContext.Database.IsSqlServer())
-                //{
-                //    catalogContext.Database.Migrate();
-                //}
+                //TODO: seed
+                if (dbContext.Database.IsSqlServer())
+                {
+                    dbContext.Database.Migrate();
+                }
 
-                //if (!await catalogContext.CatalogBrands.AnyAsync())
-                //{
-                //    await catalogContext.CatalogBrands.AddRangeAsync(
-                //        GetPreconfiguredCatalogBrands());
+                if (!await dbContext.Produtos.AnyAsync())
+                {
+                    await dbContext.Produtos.AddRangeAsync(
+                        GetProdutosSeedData());
 
-                //    await catalogContext.SaveChangesAsync();
-                //}
-
-                //if (!await catalogContext.CatalogTypes.AnyAsync())
-                //{
-                //    await catalogContext.CatalogTypes.AddRangeAsync(
-                //        GetPreconfiguredCatalogTypes());
-
-                //    await catalogContext.SaveChangesAsync();
-                //}
-
-                //if (!await catalogContext.CatalogItems.AnyAsync())
-                //{
-                //    await catalogContext.CatalogItems.AddRangeAsync(
-                //        GetPreconfiguredItems());
-
-                //    await catalogContext.SaveChangesAsync();
-                //}
+                    await dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -51,51 +36,32 @@ namespace Delivery.Infrastructure.Data
                 retryForAvailability++;
                 var log = loggerFactory.CreateLogger<AppDbContextSeed>();
                 log.LogError(ex.Message);
-                await SeedAsync(catalogContext, loggerFactory, retryForAvailability);
+                await SeedAsync(dbContext, loggerFactory, retryForAvailability);
                 throw;
             }
         }
 
-        //static IEnumerable<CatalogBrand> GetPreconfiguredCatalogBrands()
-        //{
-        //    return new List<CatalogBrand>
-        //    {
-        //        new("Azure"),
-        //        new(".NET"),
-        //        new("Visual Studio"),
-        //        new("SQL Server"),
-        //        new("Other")
-        //    };
-        //}
-
-        //static IEnumerable<CatalogType> GetPreconfiguredCatalogTypes()
-        //{
-        //    return new List<CatalogType>
-        //    {
-        //        new("Mug"),
-        //        new("T-Shirt"),
-        //        new("Sheet"),
-        //        new("USB Memory Stick")
-        //    };
-        //}
-
-        //static IEnumerable<CatalogItem> GetPreconfiguredItems()
-        //{
-        //    return new List<CatalogItem>
-        //    {
-        //        new(2,2, ".NET Bot Black Sweatshirt", ".NET Bot Black Sweatshirt", 19.5M,  "http://catalogbaseurltobereplaced/images/products/1.png"),
-        //        new(1,2, ".NET Black & White Mug", ".NET Black & White Mug", 8.50M, "http://catalogbaseurltobereplaced/images/products/2.png"),
-        //        new(2,5, "Prism White T-Shirt", "Prism White T-Shirt", 12,  "http://catalogbaseurltobereplaced/images/products/3.png"),
-        //        new(2,2, ".NET Foundation Sweatshirt", ".NET Foundation Sweatshirt", 12, "http://catalogbaseurltobereplaced/images/products/4.png"),
-        //        new(3,5, "Roslyn Red Sheet", "Roslyn Red Sheet", 8.5M, "http://catalogbaseurltobereplaced/images/products/5.png"),
-        //        new(2,2, ".NET Blue Sweatshirt", ".NET Blue Sweatshirt", 12, "http://catalogbaseurltobereplaced/images/products/6.png"),
-        //        new(2,5, "Roslyn Red T-Shirt", "Roslyn Red T-Shirt",  12, "http://catalogbaseurltobereplaced/images/products/7.png"),
-        //        new(2,5, "Kudu Purple Sweatshirt", "Kudu Purple Sweatshirt", 8.5M, "http://catalogbaseurltobereplaced/images/products/8.png"),
-        //        new(1,5, "Cup<T> White Mug", "Cup<T> White Mug", 12, "http://catalogbaseurltobereplaced/images/products/9.png"),
-        //        new(3,2, ".NET Foundation Sheet", ".NET Foundation Sheet", 12, "http://catalogbaseurltobereplaced/images/products/10.png"),
-        //        new(3,2, "Cup<T> Sheet", "Cup<T> Sheet", 8.5M, "http://catalogbaseurltobereplaced/images/products/11.png"),
-        //        new(2,5, "Prism White TShirt", "Prism White TShirt", 12, "http://catalogbaseurltobereplaced/images/products/12.png")
-        //    };
-        //}
+        static IEnumerable<Produto> GetProdutosSeedData()
+        {
+            return new List<Produto>
+            {
+                new("Shampoo 400ml", "Anti-caspa", 21.99m, 10),
+                new("Sabonete", "", 12.33m, 13),
+                new("Coxão-mole", "Valor por kg", 53.33m, 33),
+                new("Vassoura", "", 21.33m, 53),
+                new("Mussarela", "Valor por kg", 53.66m, 63),
+                new("Coca-cola 600ml", "Garrafa PET", 5.77m, 8),
+                new("Cerveja Skol Lata", "", 3.33m, 34),
+                new("Pasta de dente Sorriso", "", 3.55m, 7),
+                new("Vinho Tinto Gato Preto", "", 33.5m, 24),
+                new("Bacon 300g", "", 26.7m, 64),
+                new("Postas de Tambaqui", "Congelado", 44m, 34),
+                new("Vodka Skylime 600ml", "", 59m, 64),
+                new("Guaraná 2L", "", 9m, 89),
+                new("Vinho do Porto", "", 45.2m, 45),
+                new("Condicionador Monange", "", 23.5m, 53),
+                new("Xarope de Guaraná", "", 23.6m, 234),
+            };
+        }
     }
 }

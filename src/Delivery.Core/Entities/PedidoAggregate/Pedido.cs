@@ -9,7 +9,7 @@ namespace Delivery.Core.Entities.PedidoAggregate
 {
     public class Pedido : BaseEntity, IAggregateRoot
     {
-        public Pedido()
+        private Pedido()
         {
         }
 
