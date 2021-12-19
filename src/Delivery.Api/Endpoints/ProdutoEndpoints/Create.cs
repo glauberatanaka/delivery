@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
 
             var createdItem = await _repository.AddAsync(newProduto, cancellationToken);
 
-            response.Produto = _mapper.Map<ProdutoDTO>(createdItem);
+            response.Produto = _mapper.Map<ProdutoDto>(createdItem);
 
             return Ok(response);
         }

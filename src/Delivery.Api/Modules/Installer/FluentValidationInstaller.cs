@@ -1,4 +1,4 @@
-﻿using Delivery.Infrastructure.Installers;
+﻿using Delivery.Shared.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

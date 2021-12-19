@@ -14,7 +14,7 @@ namespace Delivery.Infrastructure.Data.Config
         public void Configure(EntityTypeBuilder<Carrinho> builder)
         {
             builder.Metadata
-                .FindNavigation(nameof(Carrinho.Items))
+                .FindNavigation(nameof(Carrinho.Itens))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.Property(c => c.IdentityUserId)

@@ -1,5 +1,5 @@
 ﻿using Delivery.Infrastructure.Data;
-using Delivery.Infrastructure.Identity;
+using Delivery.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Delivery.Infrastructure.Installers
+namespace Delivery.Shared.Interfaces
 {
     public interface IInstaller
     {

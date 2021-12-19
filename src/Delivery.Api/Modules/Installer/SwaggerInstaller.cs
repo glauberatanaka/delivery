@@ -1,4 +1,4 @@
-﻿using Delivery.Infrastructure.Installers;
+﻿using Delivery.Shared.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;

@@ -29,7 +29,10 @@ namespace Delivery.Infrastructure.Identity
             var key = Encoding.ASCII.GetBytes(_configuration["JwtConfig:Secret"]);
             var user = await _userManager.FindByNameAsync(userName);
             var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userName) };
+            var claims = new List<Claim> { 
+                new Claim(ClaimTypes.Name, userName),
+                new Claim("IdentityUserId", user.Id)
+            };
 
             foreach (var role in roles)
             {

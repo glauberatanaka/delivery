@@ -14,14 +14,14 @@ namespace Delivery.Core.Specifications
         {
             Query
                 .Where(c => c.IdentityUserId == identityUserId)
-                .Include(c => c.Items)
+                .Include(c => c.Itens)
                     .ThenInclude(i => i.Produto);
         }
         public CarrinhoComItensEProdutosSpecification(int carrinhoId)
         {
             Query
                 .Where(c => c.Id == carrinhoId)
-                .Include(c => c.Items)
+                .Include(c => c.Itens)
                     .ThenInclude(i => i.Produto);
         }
     }

@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
+using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.ProdutoEndpoints
 {
@@ -11,26 +8,27 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
     {
         public ProdutoMappingProfile()
         {
-            CreateMap<Produto, ProdutoDTO>();
+            CreateMap<Produto, ProdutoDto>()
+                .ForMember(dest => dest.ProdutoId, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<PatchRequest, Produto>()
-                .ForMember(p => p.Id, opt => opt.Ignore())
-                .ForMember(p => p.Nome, opt =>
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Nome, opt =>
                 {
                     opt.Condition(src => !string.IsNullOrEmpty(src.Nome));
                     opt.MapFrom(src => src.Nome);
                 })
-                .ForMember(p => p.Descricao, opt =>
+                .ForMember(dest => dest.Descricao, opt =>
                 {
                     opt.Condition(src => !string.IsNullOrEmpty(src.Descricao));
                     opt.MapFrom(src => src.Descricao);
                 })
-                .ForMember(p => p.Preco, opt =>
+                .ForMember(dest => dest.Preco, opt =>
                 {
                     opt.Condition(src => src.Preco.HasValue);
                     opt.MapFrom(src => src.Preco);
                 })
-                .ForMember(p => p.QuantidadeEmEstoque, opt =>
+                .ForMember(dest => dest.QuantidadeEmEstoque, opt =>
                 {
                     opt.Condition(src => src.QuantidadeEmEstoque.HasValue);
                     opt.MapFrom(src => src.QuantidadeEmEstoque);

@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
 
             if (produto is null) { return NotFound(); }
 
-            response.Produto = _mapper.Map<ProdutoDTO>(produto);
+            response.Produto = _mapper.Map<ProdutoDto>(produto);
 
             return Ok(response);
         }

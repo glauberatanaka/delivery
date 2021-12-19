@@ -52,7 +52,7 @@ namespace Delivery.Core.Services
             Guard.Against.CarrinhoNulo(carrinhoId, carrinho);
 
             carrinho
-                .Items
+                .Itens
                 .Where(x => x.Id == itemId)
                 .FirstOrDefault()
                 .SetQuantidade(quantidade);

@@ -1,17 +1,9 @@
-﻿using Delivery.Core.Interfaces;
-using Delivery.Infrastructure.Identity;
-using Delivery.Infrastructure.Installers;
+﻿using Delivery.Shared.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Delivery.Api.Modules.Installer
 {

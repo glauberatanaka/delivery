@@ -31,6 +31,8 @@ namespace Delivery.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServicesFromAssembly(Configuration);
+            services.ConfigureInfrastructureServices(Configuration);
+            services.ConfigureCoreServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

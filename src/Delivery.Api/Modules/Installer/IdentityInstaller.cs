@@ -1,7 +1,7 @@
 ﻿using Delivery.Core.Interfaces;
 using Delivery.Infrastructure.Data;
 using Delivery.Infrastructure.Identity;
-using Delivery.Infrastructure.Installers;
+using Delivery.Shared.Interfaces;
 using Delivery.Infrastructure.Modules;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

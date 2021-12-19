@@ -1,7 +1,9 @@
-﻿namespace Delivery.Api.Endpoints.ProdutoEndpoints
+﻿using Delivery.Api.Dtos;
+
+namespace Delivery.Api.Endpoints.ProdutoEndpoints
 {
     public class PatchResponse
     {
-        public ProdutoDTO Produto { get; set; }
+        public ProdutoDto Produto { get; set; }
     }
 }

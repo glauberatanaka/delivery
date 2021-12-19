@@ -7,8 +7,8 @@ namespace Delivery.Core.Entities.CarrinhoAggregate
     public class Carrinho : BaseEntity, IAggregateRoot
     {
         public string IdentityUserId { get; private set; }
-        private readonly List<CarrinhoItem> _items = new();
-        public IEnumerable<CarrinhoItem> Items => _items.AsReadOnly();
+        private readonly List<CarrinhoItem> _itens = new();
+        public IEnumerable<CarrinhoItem> Itens => _itens.AsReadOnly();
 
         public Carrinho(string identityUserId)
         {
@@ -17,18 +17,18 @@ namespace Delivery.Core.Entities.CarrinhoAggregate
 
         public void AddItem(int produtoId, int quantidade = 1)
         {
-            if (!_items.Any(i => i.ProdutoId == produtoId))
+            if (!_itens.Any(i => i.ProdutoId == produtoId))
             {
-                _items.Add(new CarrinhoItem(produtoId, quantidade));
+                _itens.Add(new CarrinhoItem(produtoId, quantidade));
                 return;
             }
 
-            var carrinhoItem = _items.FirstOrDefault(i => i.ProdutoId == produtoId);
+            var carrinhoItem = _itens.FirstOrDefault(i => i.ProdutoId == produtoId);
             carrinhoItem.AddQuantidade(quantidade);
         }
 
-        public void LimparCarrinho() => _items.Clear();
+        public void LimparCarrinho() => _itens.Clear();
 
-        public void RemoveItensVazios() => _items.RemoveAll(i => i.Quantidade <= 0);
+        public void RemoveItensVazios() => _itens.RemoveAll(i => i.Quantidade <= 0);
     }
 }

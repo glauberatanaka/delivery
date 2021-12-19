@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using AutoMapper;
+using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
 using Delivery.Core.Specifications;
@@ -49,7 +50,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
 
             var produtoList = await _repository.ListAsync(pagedSpec, cancellationToken);
 
-            response.Produtos = _mapper.Map<List<ProdutoDTO>>(produtoList);
+            response.Produtos = _mapper.Map<List<ProdutoDto>>(produtoList);
 
             response.PageCount = request.PageSize switch
             {
