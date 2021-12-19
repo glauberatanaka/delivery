@@ -4,7 +4,6 @@ using Delivery.Api.Dtos;
 using Delivery.Core.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -14,43 +13,41 @@ using System.Threading.Tasks;
 namespace Delivery.Api.Endpoints.CarrinhoEndpoints
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class AddItemCarrinho : BaseAsyncEndpoint
-        .WithRequest<AddItemCarrinhoRequest>
-        .WithResponse<AddItemCarrinhoResponse>
+    public class SetQuantidade : BaseAsyncEndpoint
+        .WithRequest<SetQuantidadeRequest>
+        .WithResponse<SetQuantidadeResponse>
     {
         private readonly ICarrinhoService _carrinhoService;
         private readonly IMapper _mapper;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public AddItemCarrinho(ICarrinhoService carrinhoService, IMapper mapper, UserManager<IdentityUser> userManager)
+        public SetQuantidade(ICarrinhoService carrinhoService, IMapper mapper)
         {
             _carrinhoService = carrinhoService;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
-        [HttpPost("/carrinho")]
+        [HttpPatch("/carrinho")]
         [SwaggerOperation(
-            Summary = "Adicionar item a carrinho",
-            Description = "Adicionar item a carrinho",
-            OperationId = "Carrinho.AddItemCarrinho",
+            Summary = "Altera quantidade de item no carrinho",
+            Description = "Altera quantidade de item no carrinho",
+            OperationId = "Carrinho.DefineQuantidade",
             Tags = new[] { "CarrinhoEndpoints" })
         ]
-        public async override Task<ActionResult<AddItemCarrinhoResponse>> HandleAsync(AddItemCarrinhoRequest request, CancellationToken cancellationToken = default)
+        public async override Task<ActionResult<SetQuantidadeResponse>> HandleAsync(SetQuantidadeRequest request, CancellationToken cancellationToken = default)
         {
             var identityUserId = User.FindFirstValue("IdentityUserId");
-            var response = new AddItemCarrinhoResponse();
 
-            var carrinho = await _carrinhoService.AdicionaItemAoCarrinhoAsync(
+            var response = new SetQuantidadeResponse();
+
+            var carrinho = await _carrinhoService.DefineQuantidade(
                 identityUserId,
                 request.ProdutoId,
                 request.Quantidade,
-                cancellationToken
-            );
+                cancellationToken);
 
             response.Carrinho = _mapper.Map<CarrinhoDto>(carrinho);
 
-            return response;
+            return Ok(response);
         }
     }
 }

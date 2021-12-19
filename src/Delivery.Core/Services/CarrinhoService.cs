@@ -18,15 +18,15 @@ namespace Delivery.Core.Services
             _carrinhoRepository = carrinhoRepository;
         }
 
-        public async Task<Carrinho> AdicionaItemAoCarrinhoAsync(string entityUserId,
+        public async Task<Carrinho> AdicionaItemAoCarrinhoAsync(string identityUserId,
             int produtoId, int quantidade, CancellationToken cancelationToken = default)
         {
-            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(entityUserId);
+            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
             var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancelationToken);
 
             if (carrinho is null)
             {
-                carrinho = new Carrinho(entityUserId);
+                carrinho = new Carrinho(identityUserId);
                 await _carrinhoRepository.AddAsync(carrinho, cancelationToken);
             }
 
@@ -36,24 +36,24 @@ namespace Delivery.Core.Services
             return carrinho;
         }
 
-        public async Task DeletaCarrinhoAsync(int carrinhoId)
+        public async Task RemoveCarrinhoAsync(int carrinhoId)
         {
             var carrinho = await _carrinhoRepository.GetByIdAsync(carrinhoId);
 
             await _carrinhoRepository.DeleteAsync(carrinho);
         }
 
-        public async Task<Carrinho> DefineQuantidade(int carrinhoId, int itemId, int quantidade,
+        public async Task<Carrinho> DefineQuantidade(string identityUserId, int produtoId, int quantidade,
             CancellationToken cancellationToken = default)
         {
             Guard.Against.Null(quantidade, nameof(quantidade));
-            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(carrinhoId);
+            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
             var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancellationToken);
-            Guard.Against.CarrinhoNulo(carrinhoId, carrinho);
+            Guard.Against.CarrinhoNulo(identityUserId, carrinho);
 
             carrinho
                 .Itens
-                .Where(x => x.Id == itemId)
+                .Where(x => x.Produto.Id == produtoId)
                 .FirstOrDefault()
                 .SetQuantidade(quantidade);
 

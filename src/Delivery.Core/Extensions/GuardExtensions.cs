@@ -13,5 +13,13 @@ namespace Delivery.Core.Extensions
                 throw new CarrinhoNuloException(carrinhoId);
             }
         }
+
+        public static void CarrinhoNulo(this IGuardClause guardClause, string identityUserId, Carrinho carrinho)
+        {
+            if (carrinho is null)
+            {
+                throw new CarrinhoNuloException(identityUserId);
+            }
+        }
     }
 }

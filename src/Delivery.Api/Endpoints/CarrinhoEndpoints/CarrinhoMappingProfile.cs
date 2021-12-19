@@ -12,9 +12,11 @@ namespace Delivery.Api.Endpoints.CarrinhoEndpoints
     {
         public CarrinhoMappingProfile()
         {
-            CreateMap<Carrinho, CarrinhoDto>();
+            CreateMap<Carrinho, CarrinhoDto>()
+                .ForMember(dest => dest.CarrinhoId, opt => opt.MapFrom(src => src.Id));
 
-            CreateMap<CarrinhoItem, CarrinhoItemDto>();
+            CreateMap<CarrinhoItem, CarrinhoItemDto>()
+                .ForMember(dest => dest.CarrinhoItemId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

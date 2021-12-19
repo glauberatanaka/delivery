@@ -8,5 +8,9 @@ namespace Delivery.Core.Exceptions
         {
 
         }
+        public CarrinhoNuloException(string identityUserId) : base($"Nenhum carrinho encontrado com o Id {identityUserId}")
+        {
+
+        }
     }
 }
