@@ -1,4 +1,5 @@
 ﻿using Delivery.Core.Entities;
+using Delivery.Core.Entities.CarrinhoAggregate;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,8 @@ namespace Delivery.Infrastructure.Data
         }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Carrinho> Carrinhos { get; set; }
+        public DbSet<CarrinhoItem> CarrinhoItens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
