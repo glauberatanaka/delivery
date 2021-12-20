@@ -11,5 +11,7 @@ namespace Delivery.Core.Interfaces
             string numero = null,
             string complemento = null,
             CancellationToken cancellationToken = default);
+
+        decimal CalculaFrete(string localidade, string uf);
     }
 }

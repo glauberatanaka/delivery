@@ -7,8 +7,10 @@ namespace Delivery.Core.Interfaces
 {
     public interface IPedidoService
     {
-        Task<Pedido> AdicionaPedido(Pedido pedido, CancellationToken cancellationToken = default);
-        Task<Pedido> ResumoPedido(string identityUserId, string cep, CancellationToken cancellationToken = default);
+        Task<Pedido> AdicionaPedido(string identityUserId, string cep, string numero,
+            CancellationToken cancellationToken = default);
+        Task<Pedido> ResumoPedido(string identityUserId, string cep, string numero = null,
+            CancellationToken cancellationToken = default);
         Task<Pedido> AtualizaStatus(int pedidoId, StatusPedido status, CancellationToken cancellationToken = default);
     }
 }

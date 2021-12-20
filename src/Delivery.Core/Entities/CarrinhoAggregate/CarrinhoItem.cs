@@ -21,6 +21,12 @@ namespace Delivery.Core.Entities.CarrinhoAggregate
             Quantidade = quantidade;
         }
 
+        public CarrinhoItem(Produto produto, int quantidade)
+        {
+            Produto = produto;
+            Quantidade = quantidade;
+        }
+
         public void AddQuantidade(int quantidade)
         {
             Guard.Against.OutOfRange(quantidade, nameof(quantidade), 0, int.MaxValue);

@@ -19,37 +19,52 @@ namespace Delivery.Core.Services
         private readonly IRepository<Pedido> _pedidoRepository;
         private readonly IFreteService _freteService;
         private readonly IRepository<Carrinho> _carrinhoRepository;
+        private readonly ICepRepository _cepRepository;
 
         public PedidoService(IRepository<Pedido> pedidoRepository,
             IFreteService freteService,
-            IRepository<Carrinho> carrinhoRepository)
+            IRepository<Carrinho> carrinhoRepository,
+            ICepRepository cepRepository)
         {
             _pedidoRepository = pedidoRepository;
             _freteService = freteService;
             _carrinhoRepository = carrinhoRepository;
+            _cepRepository = cepRepository;
         }
 
-        public async Task<Pedido> AdicionaPedido(Pedido pedido, CancellationToken cancellationToken = default)
+        public async Task<Pedido> AdicionaPedido(string identityUserId, string cep, string numero,
+            CancellationToken cancellationToken = default)
         {
-            Guard.Against.CepNuloOuVazio(pedido.Endereco.Cep);
-            Guard.Against.InvalidFormat(pedido.Endereco.Cep, nameof(pedido.Endereco.Cep), @"^\d{8}$");
-            Guard.Against.NullOrEmpty(pedido.Endereco.Numero, nameof(pedido.Endereco.Numero));
+            Guard.Against.NullOrEmpty(identityUserId, nameof(identityUserId));
+            Guard.Against.CepNuloOuVazio(cep);
+            Guard.Against.InvalidFormat(cep, nameof(cep), @"^\d{8}$");
+            Guard.Against.NullOrEmpty(numero, nameof(numero));
 
-            var valorFrete = await _freteService.CalculaFrete(pedido.Endereco.Cep);
-            pedido.SetValorFrete(valorFrete);
-            pedido.CalculaValorTotal();
+            var pedido = await ObterPedidoPorUsuarioECep(identityUserId, cep, numero, cancellationToken);
 
             var result = await _pedidoRepository.AddAsync(pedido, cancellationToken);
 
             return result;
         }
 
-        public async Task<Pedido> ResumoPedido(string identityUserId, string cep, CancellationToken cancellationToken = default)
+        public async Task<Pedido> ResumoPedido(string identityUserId, string cep, string numero = null,
+            CancellationToken cancellationToken = default)
+        {
+            Guard.Against.NullOrEmpty(identityUserId, nameof(identityUserId));
+            Guard.Against.CepNuloOuVazio(cep);
+            Guard.Against.InvalidFormat(cep, nameof(cep), @"^\d{8}$");
+
+            Pedido pedido = await ObterPedidoPorUsuarioECep(identityUserId, cep, numero, cancellationToken);
+
+            return pedido;
+        }
+
+        private async Task<Pedido> ObterPedidoPorUsuarioECep(string identityUserId, string cep, string numero = null, CancellationToken cancellationToken = default)
         {
             var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
             var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancellationToken);
 
-            var pedidoItens = carrinho
+            var itens = carrinho
                 .Itens
                 .Select(i => new PedidoItem(0,
                     i.Produto.Nome,
@@ -58,15 +73,28 @@ namespace Delivery.Core.Services
                     i.Quantidade)
                 ).ToList();
 
-            var valorFrete = await _freteService.CalculaFrete(cep);
+            var enderecoCep = await _cepRepository.GetPorCepAsync(cep, cancellationToken);
 
-            var pedido = new Pedido(pedidoItens, new PedidoEndereco(cep), valorFrete);
+            var pedidoEndereco = new PedidoEndereco(
+                enderecoCep.Cep,
+                enderecoCep.Uf,
+                enderecoCep.Localidade,
+                enderecoCep.Logradouro,
+                numero,
+                enderecoCep.Complemento
+            );
+
+            var valorFrete = _freteService.CalculaFrete(pedidoEndereco.Localidade, pedidoEndereco.Uf);
+
+            var pedido = new Pedido(identityUserId, itens, pedidoEndereco, valorFrete);
+
+            pedido.CalculaValorTotal();
 
             return pedido;
         }
 
-
-        public async Task<Pedido> AtualizaStatus(int pedidoId, StatusPedido status, CancellationToken cancellationToken = default)
+        public async Task<Pedido> AtualizaStatus(int pedidoId, StatusPedido status, 
+            CancellationToken cancellationToken = default)
         {
             //TODO: Verificar se vai limpar lista de itens ou não (faltando include).
             var pedido = await _pedidoRepository.GetByIdAsync(pedidoId, cancellationToken);

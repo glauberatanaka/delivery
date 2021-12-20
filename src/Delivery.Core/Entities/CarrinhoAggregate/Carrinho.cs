@@ -1,4 +1,5 @@
-﻿using Delivery.Core.Interfaces;
+﻿using Delivery.Core.Entities.ProdutoAggregate;
+using Delivery.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,15 +16,15 @@ namespace Delivery.Core.Entities.CarrinhoAggregate
             IdentityUserId = identityUserId;
         }
 
-        public void AddItem(int produtoId, int quantidade = 1)
+        public void AddItem(Produto produto, int quantidade = 1)
         {
-            if (!_itens.Any(i => i.ProdutoId == produtoId))
+            if (!_itens.Any(i => i.ProdutoId == produto.Id))
             {
-                _itens.Add(new CarrinhoItem(produtoId, quantidade));
+                _itens.Add(new CarrinhoItem(produto, quantidade));
                 return;
             }
 
-            var carrinhoItem = _itens.FirstOrDefault(i => i.ProdutoId == produtoId);
+            var carrinhoItem = _itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
             carrinhoItem.AddQuantidade(quantidade);
         }
 

@@ -5,6 +5,7 @@ namespace Delivery.Core.Entities.PedidoAggregate
     public class PedidoItem : BaseEntity
     {
         public int PedidoId { get; private set; }
+        public Pedido Pedido { get; set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
         public decimal Preco { get; private set; }
@@ -29,6 +30,10 @@ namespace Delivery.Core.Entities.PedidoAggregate
         public static bool operator ==(PedidoItem lhs, PedidoItem rhs)
         {
             bool status = false;
+            if (lhs is null || rhs is null)
+            {
+                return status;
+            }
             if (lhs.Nome == rhs.Nome && lhs.Descricao == rhs.Descricao
                && lhs.Preco == rhs.Preco)
             {
@@ -40,7 +45,10 @@ namespace Delivery.Core.Entities.PedidoAggregate
         public static bool operator !=(PedidoItem lhs, PedidoItem rhs)
         {
             bool status = false;
-
+            if (lhs is null || rhs is null)
+            {
+                return status;
+            }
             if (lhs.Nome != rhs.Nome || lhs.Descricao != rhs.Descricao ||
                lhs.Preco != rhs.Preco)
             {

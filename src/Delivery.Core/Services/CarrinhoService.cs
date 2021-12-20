@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Delivery.Core.Entities.CarrinhoAggregate;
+using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Extensions;
 using Delivery.Core.Interfaces;
 using Delivery.Core.Specifications;
@@ -12,10 +13,12 @@ namespace Delivery.Core.Services
     public class CarrinhoService : IRepository
     {
         private readonly IRepository<Carrinho> _carrinhoRepository;
+        private readonly IRepository<Produto> _produtoRepository;
 
-        public CarrinhoService(IRepository<Carrinho> carrinhoRepository)
+        public CarrinhoService(IRepository<Carrinho> carrinhoRepository, IRepository<Produto> produtoRepository)
         {
             _carrinhoRepository = carrinhoRepository;
+            _produtoRepository = produtoRepository;
         }
 
         public async Task<Carrinho> AdicionaItemAoCarrinhoAsync(string identityUserId,
@@ -30,7 +33,9 @@ namespace Delivery.Core.Services
                 await _carrinhoRepository.AddAsync(carrinho, cancelationToken);
             }
 
-            carrinho.AddItem(produtoId, quantidade);
+            var produto = await _produtoRepository.GetByIdAsync(produtoId, cancelationToken);
+
+            carrinho.AddItem(produto, quantidade);
 
             await _carrinhoRepository.UpdateAsync(carrinho, cancelationToken);
             return carrinho;

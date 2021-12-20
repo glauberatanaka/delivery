@@ -20,13 +20,11 @@ namespace Delivery.Api.Endpoints.CarrinhoEndpoints
     {
         private readonly IRepository _carrinhoService;
         private readonly IMapper _mapper;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public AddItemCarrinho(IRepository carrinhoService, IMapper mapper, UserManager<IdentityUser> userManager)
+        public AddItemCarrinho(IRepository carrinhoService, IMapper mapper)
         {
             _carrinhoService = carrinhoService;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         [HttpPost("/carrinho")]

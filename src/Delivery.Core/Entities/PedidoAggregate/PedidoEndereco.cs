@@ -18,11 +18,12 @@
             Cep = cep;
         }
 
-        public PedidoEndereco(string cep, string uf, string localidade, string numero, string complemento)
+        public PedidoEndereco(string cep, string uf, string localidade, string logradouro, string numero, string complemento)
         {
             Cep = cep;
             Uf = uf;
             Localidade = localidade;
+            Logradouro = logradouro;
             Numero = numero;
             Complemento = complemento;
         }

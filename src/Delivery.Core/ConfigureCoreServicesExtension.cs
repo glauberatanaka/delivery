@@ -12,6 +12,8 @@ namespace Delivery.Core
             IConfiguration configuration)
         {
             services.AddScoped<IRepository, CarrinhoService>();
+            services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<IFreteService, FreteService>();
             return services;
         }
     }

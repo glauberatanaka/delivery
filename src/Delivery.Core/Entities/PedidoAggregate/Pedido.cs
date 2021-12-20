@@ -9,8 +9,10 @@ namespace Delivery.Core.Entities.PedidoAggregate
 {
     public class Pedido : BaseEntity, IAggregateRoot
     {
-        private readonly List<PedidoItem> _pedidoItens;
-        public IEnumerable<PedidoItem> PedidoItens => _pedidoItens.AsReadOnly();
+        public string IdentityUserId { get; private set; }
+
+        private readonly List<PedidoItem> _itens;
+        public IEnumerable<PedidoItem> Itens => _itens.AsReadOnly();
 
         public PedidoEndereco Endereco { get; private set; }
 
@@ -27,9 +29,10 @@ namespace Delivery.Core.Entities.PedidoAggregate
         {
         }
 
-        public Pedido(List<PedidoItem> pedidoItens, PedidoEndereco endereco, decimal valorFrete)
+        public Pedido(string identityUserId, List<PedidoItem> itens, PedidoEndereco endereco, decimal valorFrete)
         {
-            _pedidoItens = pedidoItens;
+            IdentityUserId = identityUserId;
+            _itens = itens;
             Endereco = endereco;
             ValorFrete = valorFrete;
         }
@@ -47,7 +50,7 @@ namespace Delivery.Core.Entities.PedidoAggregate
 
         public void CalculaValorTotal()
         {
-            var valorTotal = _pedidoItens.Sum(i => i.Preco);
+            var valorTotal = _itens.Sum(i => i.Preco * i.Quantidade);
             ValorTotal = valorTotal;
         }
 
@@ -58,13 +61,13 @@ namespace Delivery.Core.Entities.PedidoAggregate
 
         public void AddItem(PedidoItem pedidoItem)
         {
-            if (!_pedidoItens.Any(item => item == pedidoItem))
+            if (!_itens.Any(item => item == pedidoItem))
             {
-                _pedidoItens.Add(pedidoItem);
+                _itens.Add(pedidoItem);
                 return;
             }
 
-            var item = _pedidoItens.FirstOrDefault(item => item == pedidoItem);
+            var item = _itens.FirstOrDefault(item => item == pedidoItem);
             item.AddQuantidade(pedidoItem.Quantidade);
         }
 
