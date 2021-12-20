@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Core.Services
 {
-    public class CarrinhoService : IRepository
+    public class CarrinhoService : ICarrinhoService
     {
         private readonly IRepository<Carrinho> _carrinhoRepository;
         private readonly IRepository<Produto> _produtoRepository;
@@ -48,6 +48,11 @@ namespace Delivery.Core.Services
             await _carrinhoRepository.DeleteAsync(carrinho);
         }
 
+        public async Task RemoveCarrinhoAsync(Carrinho carrinho)
+        {
+            await _carrinhoRepository.DeleteAsync(carrinho);
+        }
+
         public async Task<Carrinho> DefineQuantidade(string identityUserId, int produtoId, int quantidade,
             CancellationToken cancellationToken = default)
         {
@@ -65,6 +70,14 @@ namespace Delivery.Core.Services
             carrinho.RemoveItensVazios();
 
             await _carrinhoRepository.UpdateAsync(carrinho, cancellationToken);
+            return carrinho;
+        }
+
+        public async Task<Carrinho> ObterPorIdentityUserId(string identityUserId, CancellationToken cancellationToken = default)
+        {
+            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
+            var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancellationToken);
+
             return carrinho;
         }
     }

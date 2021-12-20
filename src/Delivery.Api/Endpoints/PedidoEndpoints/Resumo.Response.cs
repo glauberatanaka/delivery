@@ -2,7 +2,7 @@
 
 namespace Delivery.Api.Endpoints.PedidoEndpoints
 {
-    public class GetResumoResponse
+    public class ResumoResponse
     {
         public PedidoDto Resumo { get; internal set; }
     }

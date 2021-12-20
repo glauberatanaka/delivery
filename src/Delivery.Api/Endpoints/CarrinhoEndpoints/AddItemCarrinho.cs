@@ -18,10 +18,10 @@ namespace Delivery.Api.Endpoints.CarrinhoEndpoints
         .WithRequest<AddItemCarrinhoRequest>
         .WithResponse<AddItemCarrinhoResponse>
     {
-        private readonly IRepository _carrinhoService;
+        private readonly ICarrinhoService _carrinhoService;
         private readonly IMapper _mapper;
 
-        public AddItemCarrinho(IRepository carrinhoService, IMapper mapper)
+        public AddItemCarrinho(ICarrinhoService carrinhoService, IMapper mapper)
         {
             _carrinhoService = carrinhoService;
             _mapper = mapper;

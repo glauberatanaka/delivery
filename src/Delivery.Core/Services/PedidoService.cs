@@ -18,17 +18,17 @@ namespace Delivery.Core.Services
     {
         private readonly IRepository<Pedido> _pedidoRepository;
         private readonly IFreteService _freteService;
-        private readonly IRepository<Carrinho> _carrinhoRepository;
+        private readonly ICarrinhoService _carrinhoService;
         private readonly ICepRepository _cepRepository;
 
         public PedidoService(IRepository<Pedido> pedidoRepository,
             IFreteService freteService,
-            IRepository<Carrinho> carrinhoRepository,
+            ICarrinhoService carrinhoService,
             ICepRepository cepRepository)
         {
             _pedidoRepository = pedidoRepository;
             _freteService = freteService;
-            _carrinhoRepository = carrinhoRepository;
+            _carrinhoService = carrinhoService;
             _cepRepository = cepRepository;
         }
 
@@ -40,9 +40,16 @@ namespace Delivery.Core.Services
             Guard.Against.InvalidFormat(cep, nameof(cep), @"^\d{8}$");
             Guard.Against.NullOrEmpty(numero, nameof(numero));
 
-            var pedido = await ObterPedidoPorUsuarioECep(identityUserId, cep, numero, cancellationToken);
+            var carrinho = await _carrinhoService.ObterPorIdentityUserId(identityUserId);
+
+            Guard.Against.CarrinhoNulo(identityUserId, carrinho);
+            Guard.Against.CarrinhoVazio(identityUserId, carrinho);
+
+            var pedido = await ObterPedidoPorUsuarioECep(identityUserId, carrinho, cep, numero, cancellationToken);
 
             var result = await _pedidoRepository.AddAsync(pedido, cancellationToken);
+
+            await _carrinhoService.RemoveCarrinhoAsync(carrinho);
 
             return result;
         }
@@ -54,16 +61,16 @@ namespace Delivery.Core.Services
             Guard.Against.CepNuloOuVazio(cep);
             Guard.Against.InvalidFormat(cep, nameof(cep), @"^\d{8}$");
 
-            Pedido pedido = await ObterPedidoPorUsuarioECep(identityUserId, cep, numero, cancellationToken);
+            var carrinho = await _carrinhoService.ObterPorIdentityUserId(identityUserId);
+
+            Pedido pedido = await ObterPedidoPorUsuarioECep(identityUserId, carrinho, cep, numero, cancellationToken);
 
             return pedido;
         }
 
-        private async Task<Pedido> ObterPedidoPorUsuarioECep(string identityUserId, string cep, string numero = null, CancellationToken cancellationToken = default)
+        private async Task<Pedido> ObterPedidoPorUsuarioECep(string identityUserId,
+            Carrinho carrinho, string cep, string numero = null, CancellationToken cancellationToken = default)
         {
-            var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
-            var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancellationToken);
-
             var itens = carrinho
                 .Itens
                 .Select(i => new PedidoItem(0,

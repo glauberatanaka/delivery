@@ -2,9 +2,9 @@
 
 namespace Delivery.Api.Endpoints.PedidoEndpoints
 {
-    public class GetResumoRequestValidator : AbstractValidator<GetResumoRequest>
+    public class ResumoRequestValidator : AbstractValidator<ResumoRequest>
     {
-        public GetResumoRequestValidator()
+        public ResumoRequestValidator()
         {
             RuleFor(x => x.Cep)
                 .NotEmpty()

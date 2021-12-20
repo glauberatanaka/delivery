@@ -17,29 +17,34 @@ using System.Threading.Tasks;
 namespace Delivery.Api.Endpoints.PedidoEndpoints
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class GetResumo : BaseAsyncEndpoint
-        .WithRequest<GetResumoRequest>
-        .WithResponse<GetResumoResponse>
+    public class Resumo : BaseAsyncEndpoint
+        .WithRequest<ResumoRequest>
+        .WithResponse<ResumoResponse>
     {
         private readonly IPedidoService _pedidoService;
         private readonly IMapper _mapper;
 
-        public GetResumo(IPedidoService pedidoService, IMapper mapper)
+        public Resumo(IPedidoService pedidoService, IMapper mapper)
         {
             _pedidoService = pedidoService;
             _mapper = mapper;
         }
 
-        [HttpPost("/pedido/resumo")]
+        [HttpGet("/pedido/resumo")]
         [SwaggerOperation(
             Summary = "Resumo do pedido",
             Description = "Resumo do pedido",
             OperationId = "Pedido.GetResumo",
             Tags = new[] { "PedidoEndpoints" })
         ]
-        public async override Task<ActionResult<GetResumoResponse>> HandleAsync(GetResumoRequest request, CancellationToken cancellationToken = default)
+        public async override Task<ActionResult<ResumoResponse>> HandleAsync([FromQuery]ResumoRequest request, CancellationToken cancellationToken = default)
         {
-            var response = new GetResumoResponse();
+            if (string.IsNullOrEmpty(request.Cep))
+            {
+                return BadRequest();
+            }
+
+            var response = new ResumoResponse();
 
             var identityUserId = User.FindFirstValue("IdentityUserId");
 
