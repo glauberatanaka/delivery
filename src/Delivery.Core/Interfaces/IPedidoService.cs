@@ -11,6 +11,6 @@ namespace Delivery.Core.Interfaces
             CancellationToken cancellationToken = default);
         Task<Pedido> ResumoPedido(string identityUserId, string cep, string numero = null,
             CancellationToken cancellationToken = default);
-        Task<Pedido> AtualizaStatus(int pedidoId, StatusPedido status, CancellationToken cancellationToken = default);
+        Task<Pedido> CancelaPedido(Pedido pedido, CancellationToken cancellationToken = default);
     }
 }

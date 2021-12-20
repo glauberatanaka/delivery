@@ -1,6 +1,6 @@
-﻿using Ardalis.GuardClauses;
-using Delivery.Core.Interfaces;
+﻿using Delivery.Core.Interfaces;
 using Delivery.Shared.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,7 @@ namespace Delivery.Core.Entities.PedidoAggregate
     public class Pedido : BaseEntity, IAggregateRoot
     {
         public string IdentityUserId { get; private set; }
+        public IdentityUser IdentityUser { get; private set; }
 
         private readonly List<PedidoItem> _itens;
         public IEnumerable<PedidoItem> Itens => _itens.AsReadOnly();
@@ -37,7 +38,7 @@ namespace Delivery.Core.Entities.PedidoAggregate
             ValorFrete = valorFrete;
         }
 
-        
+
         public void SetEndereco(PedidoEndereco endereco)
         {
             Endereco = endereco;

@@ -100,24 +100,23 @@ namespace Delivery.Core.Services
             return pedido;
         }
 
-        public async Task<Pedido> AtualizaStatus(int pedidoId, StatusPedido status, 
+        public async Task<Pedido> CancelaPedido(Pedido pedido,
             CancellationToken cancellationToken = default)
         {
-            //TODO: Verificar se vai limpar lista de itens ou não (faltando include).
-            var pedido = await _pedidoRepository.GetByIdAsync(pedidoId, cancellationToken);
-
             Guard.Against.Null(pedido, nameof(pedido));
+            Guard.Against.PedidoJaPagoEProcessado(pedido.Status);
 
-            if (pedido.Status == status)
-            {
-                return pedido;
-            }
+            await AtualizaStatus(pedido, StatusPedido.Cancelado, cancellationToken);
 
+            return pedido;
+        }
+
+        private async Task AtualizaStatus(Pedido pedido, StatusPedido status, 
+            CancellationToken cancellationToken = default)
+        {
             pedido.SetStatus(status);
 
             await _pedidoRepository.UpdateAsync(pedido, cancellationToken);
-
-            return pedido;
         }
 
     }

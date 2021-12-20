@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Delivery.Core.Entities.CarrinhoAggregate;
 using Delivery.Core.Exceptions;
+using Delivery.Shared.Enums;
 
 namespace Delivery.Core.Extensions
 {
@@ -35,6 +36,14 @@ namespace Delivery.Core.Extensions
             if (string.IsNullOrEmpty(cep))
             {
                 throw new CepNuloOuVazioException();
+            }
+        }
+
+        public static void PedidoJaPagoEProcessado(this IGuardClause guardClause, StatusPedido status)
+        {
+            if (status is not StatusPedido.EmProcessamento and not StatusPedido.AguardandoPagamento)
+            {
+                throw new PedidoJaProcessadoException();
             }
         }
 

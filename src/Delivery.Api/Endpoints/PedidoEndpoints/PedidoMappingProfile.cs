@@ -12,7 +12,10 @@ namespace Delivery.Api.Endpoints.PedidoEndpoints
     {
         public PedidoMappingProfile()
         {
-            CreateMap<Pedido, PedidoDto>();
+            CreateMap<Pedido, PedidoDto>()
+                .ForMember(dest => dest.PedidoId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.UsuarioNome,
+                    opt => opt.MapFrom(src => src.IdentityUser.UserName));
 
             CreateMap<PedidoItem, PedidoItemDto>();
 
