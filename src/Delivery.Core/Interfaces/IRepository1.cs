@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Core.Interfaces
 {
-    public interface ICarrinhoService
+    public interface IRepository
     {
         Task<Carrinho> AdicionaItemAoCarrinhoAsync(string identityUserId,
             int produtoId, int quantidade, CancellationToken cancelationToken = default);

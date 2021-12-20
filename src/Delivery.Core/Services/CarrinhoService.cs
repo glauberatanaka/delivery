@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Core.Services
 {
-    public class CarrinhoService : ICarrinhoService
+    public class CarrinhoService : IRepository
     {
         private readonly IRepository<Carrinho> _carrinhoRepository;
 

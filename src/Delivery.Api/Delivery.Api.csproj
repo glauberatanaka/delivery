@@ -32,4 +32,8 @@
     <ProjectReference Include="..\Delivery.Infrastructure\Delivery.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\PedidoEndpoints\" />
+  </ItemGroup>
+
 </Project>

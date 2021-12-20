@@ -19,6 +19,7 @@ namespace Delivery.Infrastructure.Modules
             services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<IIdentityUserInterface, IdentityUserRepository>();
             services.AddScoped<ITokenClaimsService, TokenClaimService>();
+            services.AddScoped<ICepRepository, CepRepository>();
             return services;
         }
 

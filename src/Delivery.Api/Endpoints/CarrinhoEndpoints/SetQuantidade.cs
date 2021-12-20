@@ -17,10 +17,10 @@ namespace Delivery.Api.Endpoints.CarrinhoEndpoints
         .WithRequest<SetQuantidadeRequest>
         .WithResponse<SetQuantidadeResponse>
     {
-        private readonly ICarrinhoService _carrinhoService;
+        private readonly IRepository _carrinhoService;
         private readonly IMapper _mapper;
 
-        public SetQuantidade(ICarrinhoService carrinhoService, IMapper mapper)
+        public SetQuantidade(IRepository carrinhoService, IMapper mapper)
         {
             _carrinhoService = carrinhoService;
             _mapper = mapper;

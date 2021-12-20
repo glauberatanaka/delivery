@@ -21,5 +21,12 @@ namespace Delivery.Core.Extensions
                 throw new CarrinhoNuloException(identityUserId);
             }
         }
+        public static void CepNuloOuVazio(this IGuardClause guardClause, string cep)
+        {
+            if (string.IsNullOrEmpty(cep))
+            {
+                throw new CepNuloOuVazioException();
+            }
+        }
     }
 }

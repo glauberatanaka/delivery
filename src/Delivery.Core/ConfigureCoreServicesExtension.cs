@@ -11,7 +11,7 @@ namespace Delivery.Core
         public static IServiceCollection ConfigureCoreServices(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddScoped<ICarrinhoService, CarrinhoService>();
+            services.AddScoped<IRepository, CarrinhoService>();
             return services;
         }
     }
