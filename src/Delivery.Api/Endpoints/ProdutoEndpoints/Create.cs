@@ -3,6 +3,9 @@ using AutoMapper;
 using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading;
@@ -10,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.ProdutoEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Create : BaseAsyncEndpoint
         .WithRequest<CreateProdutoRequest>
         .WithResponse<CreateProdutoResponse>
@@ -25,7 +29,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
 
         [HttpPost("/produto")]
         [SwaggerOperation(
-            Summary = "Cria um novo Produto",
+            Summary = "Cria um novo Produto (ADM)",
             Description = "Cria um novo Produto",
             OperationId = "Produto.Create",
             Tags = new[] { "ProdutoEndpoints" })

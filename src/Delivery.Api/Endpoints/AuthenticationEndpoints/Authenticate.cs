@@ -33,7 +33,9 @@ namespace Delivery.Api.Endpoints.AuthenticationEndpoints
         [HttpPost("/auth")]
         [SwaggerOperation(
             Summary = "Autentica usuário",
-            Description = "Autentica usuário",
+            Description = "{\"username\": \"user@user.com\", \"password\": \"User@123\"}<br />" +
+            "{\"username\": \"admin@admin.com\", \"password\": \"Admin@123\"}<br />" +
+            "Adicionar \"bearer \" antes do token",
             OperationId = "auth.authenticate",
             Tags = new[] { "AuthEndpoints" })
         ]

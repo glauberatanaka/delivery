@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Delivery.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211219031758_addCarrinho")]
-    partial class addCarrinho
+    [Migration("20211220130408_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,6 +60,66 @@ namespace Delivery.Infrastructure.Migrations
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("CarrinhoItens");
+                });
+
+            modelBuilder.Entity("Delivery.Core.Entities.PedidoAggregate.Pedido", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorFrete")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
+
+                    b.ToTable("Pedidos");
+                });
+
+            modelBuilder.Entity("Delivery.Core.Entities.PedidoAggregate.PedidoItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PedidoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.ToTable("PedidoItens");
                 });
 
             modelBuilder.Entity("Delivery.Core.Entities.ProdutoAggregate.Produto", b =>
@@ -301,6 +361,69 @@ namespace Delivery.Infrastructure.Migrations
                     b.Navigation("Produto");
                 });
 
+            modelBuilder.Entity("Delivery.Core.Entities.PedidoAggregate.Pedido", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Delivery.Core.Entities.PedidoAggregate.PedidoEndereco", "Endereco", b1 =>
+                        {
+                            b1.Property<int>("PedidoId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Cep")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Cep");
+
+                            b1.Property<string>("Complemento")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Complemento");
+
+                            b1.Property<string>("Localidade")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Localidade");
+
+                            b1.Property<string>("Logradouro")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Logradouro");
+
+                            b1.Property<string>("Numero")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Numero");
+
+                            b1.Property<string>("Uf")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Uf");
+
+                            b1.HasKey("PedidoId");
+
+                            b1.ToTable("Pedidos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PedidoId");
+                        });
+
+                    b.Navigation("Endereco");
+
+                    b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("Delivery.Core.Entities.PedidoAggregate.PedidoItem", b =>
+                {
+                    b.HasOne("Delivery.Core.Entities.PedidoAggregate.Pedido", "Pedido")
+                        .WithMany("Itens")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -353,6 +476,11 @@ namespace Delivery.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Delivery.Core.Entities.CarrinhoAggregate.Carrinho", b =>
+                {
+                    b.Navigation("Itens");
+                });
+
+            modelBuilder.Entity("Delivery.Core.Entities.PedidoAggregate.Pedido", b =>
                 {
                     b.Navigation("Itens");
                 });

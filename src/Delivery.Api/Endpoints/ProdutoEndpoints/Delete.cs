@@ -1,16 +1,17 @@
 ﻿using Ardalis.ApiEndpoints;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.ProdutoEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Delete : BaseAsyncEndpoint
         .WithRequest<DeleteRequest>
         .WithResponse<DeleteResponse>
@@ -24,7 +25,7 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
 
         [HttpDelete("produto/{CatalogItemId}")]
         [SwaggerOperation(
-            Summary = "Deleta um Produto",
+            Summary = "Deleta um Produto (ADM)",
             Description = "Deleta um Produto",
             OperationId = "Produto.Delete",
             Tags = new[] { "ProdutoEndpoints" })

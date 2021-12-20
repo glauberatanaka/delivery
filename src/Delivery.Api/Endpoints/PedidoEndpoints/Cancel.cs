@@ -5,6 +5,9 @@ using Delivery.Core.Entities.PedidoAggregate;
 using Delivery.Core.Interfaces;
 using Delivery.Core.Specifications;
 using Delivery.Shared.Enums;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -15,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.PedidoEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Cancel : BaseAsyncEndpoint
         .WithRequest<int>
         .WithResponse<CancelResponse>

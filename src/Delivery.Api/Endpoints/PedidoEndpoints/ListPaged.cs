@@ -4,16 +4,19 @@ using Delivery.Api.Dtos;
 using Delivery.Core.Entities.PedidoAggregate;
 using Delivery.Core.Interfaces;
 using Delivery.Core.Specifications;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.PedidoEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ListPaged : BaseAsyncEndpoint
         .WithRequest<ListPagedRequest>
         .WithResponse<ListPagedResponse>
@@ -47,7 +50,7 @@ namespace Delivery.Api.Endpoints.PedidoEndpoints
                 identityUserId: request.IdentityUserId,
                 status: request.Status);
 
-            var pedidos= await _pedidoRepository.ListAsync(pedidoListPagedSpec);
+            var pedidos = await _pedidoRepository.ListAsync(pedidoListPagedSpec);
 
             response.Pedidos = _mapper.Map<List<PedidoDto>>(pedidos);
 

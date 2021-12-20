@@ -10,9 +10,9 @@ namespace Delivery.Infrastructure.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
+            var connectionString = configuration["SqlServerContainerConnection"] ?? configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
         }
     }
 }

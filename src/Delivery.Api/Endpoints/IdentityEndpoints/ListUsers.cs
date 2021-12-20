@@ -2,6 +2,9 @@
 using AutoMapper;
 using Delivery.Api.Dtos;
 using Delivery.Infrastructure.Identity;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
@@ -10,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.IdentityEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ListUsers : BaseAsyncEndpoint
         .WithoutRequest
         .WithResponse<ListUsersResponse>

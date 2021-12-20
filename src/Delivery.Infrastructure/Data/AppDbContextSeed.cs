@@ -15,7 +15,6 @@ namespace Delivery.Infrastructure.Data
             var retryForAvailability = retry;
             try
             {
-                //TODO: seed
                 if (dbContext.Database.IsSqlServer())
                 {
                     dbContext.Database.Migrate();

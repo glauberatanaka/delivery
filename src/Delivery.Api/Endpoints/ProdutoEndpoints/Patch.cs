@@ -3,16 +3,17 @@ using AutoMapper;
 using Delivery.Api.Dtos;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Delivery.Core.Interfaces;
+using Delivery.Shared.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Delivery.Api.Endpoints.ProdutoEndpoints
 {
+    [Authorize(Roles = Constants.Roles.ADMINISTRATORS, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Patch : BaseAsyncEndpoint
         .WithRequest<PatchRequest>
         .WithResponse<PatchResponse>
@@ -27,12 +28,12 @@ namespace Delivery.Api.Endpoints.ProdutoEndpoints
         }
         [HttpPatch("/produto/{id}")]
         [SwaggerOperation(
-            Summary = "Atualiza Produto",
+            Summary = "Atualiza Produto (ADM)",
             Description = "Atualiza Produto",
             OperationId = "Produto.Patch",
             Tags = new[] { "ProdutoEndpoints" })
         ]
-        public override async Task<ActionResult<PatchResponse>> HandleAsync([FromBody]PatchRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<PatchResponse>> HandleAsync([FromBody] PatchRequest request, CancellationToken cancellationToken = default)
         {
             var response = new PatchResponse();
 

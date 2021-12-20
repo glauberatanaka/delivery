@@ -1,0 +1,28 @@
+version: '3.4'
+
+#services:
+#  delivery.api:
+#    image: ${DOCKER_REGISTRY-}deliveryapi
+#    build:
+#      context: .
+#      dockerfile: src/Delivery.Api/Dockerfile
+
+
+services:
+  mssql-server:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SenhaBd@123"
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+  delivery.api:
+    image: ${DOCKER_REGISTRY-}deliveryapi
+    build:
+      context: .
+      dockerfile: src/Delivery.Api/Dockerfile
+    environment:
+      SqlServerContainerConnection: "Server=mssql-server, 1433;Initial Catalog=DeliveryDb;User ID=SA;Password=SenhaBd@123"
+    ports: 
+      - "8080:80"
