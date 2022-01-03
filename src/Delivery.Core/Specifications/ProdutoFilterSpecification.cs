@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using Delivery.Core.Entities.ProdutoAggregate;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Delivery.Core.Specifications
@@ -16,6 +17,13 @@ namespace Delivery.Core.Specifications
                 .OrderBy(x => x.Nome)
                 .Where(p => (string.IsNullOrEmpty(nome) || EF.Functions.Like(p.Nome, nomeLike)) &&
                 (string.IsNullOrEmpty(descricao) || EF.Functions.Like(p.Nome, descricaoLike)));
+        }
+
+        public ProdutoFilterSpecification(IEnumerable<int> produtoIdList)
+        {
+            Query
+                .OrderBy(x => x.Nome)
+                .Where(x => produtoIdList.Contains(x.Id));
         }
     }
 }

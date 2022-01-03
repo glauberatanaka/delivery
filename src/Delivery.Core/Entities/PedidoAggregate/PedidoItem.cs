@@ -6,14 +6,16 @@ namespace Delivery.Core.Entities.PedidoAggregate
     {
         public int PedidoId { get; private set; }
         public Pedido Pedido { get; set; }
+        public int ProdutoId { get; set; }
         public string Nome { get; private set; }
         public string Descricao { get; private set; }
         public decimal Preco { get; private set; }
         public int Quantidade { get; private set; }
 
-        public PedidoItem(int pedidoId, string nome, string descricao, decimal preco, int quantidade)
+        public PedidoItem(int pedidoId, int produtoId, string nome, string descricao, decimal preco, int quantidade)
         {
             PedidoId = pedidoId;
+            ProdutoId = produtoId;
             Nome = nome;
             Descricao = descricao;
             Preco = preco;

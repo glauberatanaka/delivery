@@ -85,6 +85,7 @@ namespace Delivery.Core.Services
             var itens = carrinho
                 .Itens
                 .Select(i => new PedidoItem(0,
+                    i.Produto.Id,
                     i.Produto.Nome,
                     i.Produto.Descricao,
                     i.Produto.Preco,
@@ -118,6 +119,23 @@ namespace Delivery.Core.Services
             Guard.Against.PedidoJaPagoEProcessado(pedido.Status);
 
             await AtualizaStatus(pedido, StatusPedido.Cancelado, cancellationToken);
+
+            var produtosSpec = new ProdutoFilterSpecification(pedido.Itens.Select(i => i.ProdutoId));
+            var produtoList = await _produtoRepository.ListAsync(produtosSpec);
+
+            produtoList = produtoList.Select(p => {
+                var quantidadeItemPedidoCancelado = pedido
+                    .Itens
+                    .Where(i => i.ProdutoId == p.Id)
+                    .FirstOrDefault()
+                    .Quantidade;
+
+                p.SetQuantidadeEmEstoque(p.QuantidadeEmEstoque + quantidadeItemPedidoCancelado);
+
+                return p;
+            }).ToList();
+
+            _produtoRepository.UpdateRange(produtoList);
 
             return pedido;
         }

@@ -26,6 +26,7 @@ namespace Delivery.Infrastructure.Data
         public void UpdateRange(IEnumerable<Produto> produtoListUpdate)
         {
             _db.UpdateRange(produtoListUpdate);
+            _db.SaveChanges();
         }
     }
 }
