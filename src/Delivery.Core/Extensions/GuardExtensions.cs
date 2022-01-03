@@ -47,6 +47,32 @@ namespace Delivery.Core.Extensions
             }
         }
 
+        public static void ProdutoForaDeEstoque(this IGuardClause guardClause,
+             int quantidadeEmEstoque, int quantidadeAVerificar)
+        {
+            if (quantidadeEmEstoque < quantidadeAVerificar)
+            {
+                throw new ProdutoSemEstoqueException();
+            }
+        }
+
+        public static void ProdutoForaDeEstoqueCheckout(this IGuardClause guardClause,
+             Carrinho carrinho)
+        {
+            string produtosString = "";
+            foreach (var item in carrinho.Itens)
+            {
+                if (item.Quantidade > item.Produto.QuantidadeEmEstoque)
+                {
+                    produtosString += item.Produto.Nome + "; ";
+                }
+            }
+            if (!string.IsNullOrEmpty(produtosString))
+            {
+                throw new ProdutoSemEstoqueException(produtosString);
+            }
+        }
+
 
     }
 }

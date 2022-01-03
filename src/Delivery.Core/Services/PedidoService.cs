@@ -20,16 +20,19 @@ namespace Delivery.Core.Services
         private readonly IFreteService _freteService;
         private readonly ICarrinhoService _carrinhoService;
         private readonly ICepRepository _cepRepository;
+        private readonly IProdutoRepository _produtoRepository;
 
         public PedidoService(IRepository<Pedido> pedidoRepository,
             IFreteService freteService,
             ICarrinhoService carrinhoService,
-            ICepRepository cepRepository)
+            ICepRepository cepRepository,
+            IProdutoRepository produtoRepository)
         {
             _pedidoRepository = pedidoRepository;
             _freteService = freteService;
             _carrinhoService = carrinhoService;
             _cepRepository = cepRepository;
+            _produtoRepository = produtoRepository;
         }
 
         public async Task<Pedido> AdicionaPedido(string identityUserId, string cep, string numero,
@@ -44,10 +47,18 @@ namespace Delivery.Core.Services
 
             Guard.Against.CarrinhoNulo(identityUserId, carrinho);
             Guard.Against.CarrinhoVazio(identityUserId, carrinho);
+            Guard.Against.ProdutoForaDeEstoqueCheckout(carrinho);
 
             var pedido = await ObterPedidoPorUsuarioECep(identityUserId, carrinho, cep, numero, cancellationToken);
 
             var result = await _pedidoRepository.AddAsync(pedido, cancellationToken);
+
+            var produtosUpdate = carrinho.Itens.Select(i => {
+                i.Produto.SetQuantidadeEmEstoque(i.Produto.QuantidadeEmEstoque - i.Quantidade);
+                return i.Produto;
+            }).ToList();
+
+            _produtoRepository.UpdateRange(produtosUpdate);
 
             await _carrinhoService.RemoveCarrinhoAsync(carrinho);
 

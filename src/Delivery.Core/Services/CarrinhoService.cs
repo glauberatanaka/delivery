@@ -13,29 +13,35 @@ namespace Delivery.Core.Services
     public class CarrinhoService : ICarrinhoService
     {
         private readonly IRepository<Carrinho> _carrinhoRepository;
-        private readonly IRepository<Produto> _produtoRepository;
+        private readonly IProdutoRepository _produtoRepository;
 
-        public CarrinhoService(IRepository<Carrinho> carrinhoRepository, IRepository<Produto> produtoRepository)
+        public CarrinhoService(IRepository<Carrinho> carrinhoRepository, IProdutoRepository produtoRepository)
         {
             _carrinhoRepository = carrinhoRepository;
             _produtoRepository = produtoRepository;
         }
 
         public async Task<Carrinho> AdicionaItemAoCarrinhoAsync(string identityUserId,
-            int produtoId, int quantidade, CancellationToken cancelationToken = default)
+            int produtoId, int quantidadeAdicionar, CancellationToken cancelationToken = default)
         {
             var carrinhoSpec = new CarrinhoComItensEProdutosSpecification(identityUserId);
             var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancelationToken);
+            var produto = await _produtoRepository.GetByIdAsync(produtoId, cancelationToken);
 
+            Guard.Against.Null(produto, nameof(produto));
+            var quantidadeVerificar = quantidadeAdicionar;
             if (carrinho is null)
             {
                 carrinho = new Carrinho(identityUserId);
                 await _carrinhoRepository.AddAsync(carrinho, cancelationToken);
             }
+            else if (carrinho.Itens.Any(i => i.ProdutoId == produtoId))
+            {
+                quantidadeVerificar += carrinho.Itens.Where(i => i.ProdutoId == produtoId).FirstOrDefault().Quantidade;
+            }
 
-            var produto = await _produtoRepository.GetByIdAsync(produtoId, cancelationToken);
-
-            carrinho.AddItem(produto, quantidade);
+            Guard.Against.ProdutoForaDeEstoque(produto.QuantidadeEmEstoque, quantidadeVerificar);
+            carrinho.AddItem(produto, quantidadeAdicionar);
 
             await _carrinhoRepository.UpdateAsync(carrinho, cancelationToken);
             return carrinho;
@@ -79,6 +85,15 @@ namespace Delivery.Core.Services
             var carrinho = await _carrinhoRepository.GetBySpecAsync(carrinhoSpec, cancellationToken);
 
             return carrinho;
+        }
+
+        private async Task<int> ObterQuantidadeEmEstoque(int produtoId, CancellationToken cancellationToken)
+        {
+            var produtoQuantidadeEstoqueSpec = new ProdutoQuantidadeEmEstoqueSpecification(produtoId);
+            var quantidadeEmEstoque = await _produtoRepository
+                .ObterQuantidadeEmEstoque(produtoQuantidadeEstoqueSpec, cancellationToken);
+
+            return quantidadeEmEstoque;
         }
     }
 }

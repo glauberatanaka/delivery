@@ -14,7 +14,7 @@ namespace UnitTests.DeliveryCore.Services
     {
         private readonly CarrinhoService _carrinhoService;
         private readonly IRepository<Carrinho> _carrinhoRepository = Substitute.For<IRepository<Carrinho>>();
-        private readonly IRepository<Produto> _produtoRepository = Substitute.For<IRepository<Produto>>();
+        private readonly IProdutoRepository _produtoRepository = Substitute.For<IProdutoRepository>();
         private readonly string _userIdentityId = "Test userIdentityId";
         private readonly IFixture _fixture = new Fixture();
 

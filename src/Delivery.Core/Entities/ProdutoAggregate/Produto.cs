@@ -1,4 +1,5 @@
-﻿using Delivery.Core.Interfaces;
+﻿using Ardalis.GuardClauses;
+using Delivery.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,15 @@ namespace Delivery.Core.Entities.ProdutoAggregate
             this.QuantidadeEmEstoque = quantidadeEmEstoque;
         }
 
-        public string Nome { get; set; }
-        public string Descricao { get; set; }
-        public decimal Preco { get; set; }
-        public int QuantidadeEmEstoque { get; set; }
+        public string Nome { get; private set; }
+        public string Descricao { get; private set; }
+        public decimal Preco { get; private set; }
+        public int QuantidadeEmEstoque { get; private set; }
+
+        public void SetQuantidadeEmEstoque(int novaQuantidade)
+        {
+            this.QuantidadeEmEstoque = novaQuantidade;
+        }
 
     }
 }
