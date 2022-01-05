@@ -12,6 +12,9 @@
 - Docker e Docker-Compose
 - Ardalis Endpoints
 - Ardalis Specification
+- XUnit
+- NSubstitute
+- AutoFixture
 
 ## Features
 
