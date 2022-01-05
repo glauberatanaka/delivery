@@ -1,13 +1,5 @@
 version: '3.4'
 
-#services:
-#  delivery.api:
-#    image: ${DOCKER_REGISTRY-}deliveryapi
-#    build:
-#      context: .
-#      dockerfile: src/Delivery.Api/Dockerfile
-
-
 services:
   mssql-server:
     image: mcr.microsoft.com/mssql/server:2017-latest
@@ -23,6 +15,8 @@ services:
       context: .
       dockerfile: src/Delivery.Api/Dockerfile
     environment:
-      SqlServerContainerConnection: "Server=mssql-server, 1433;Initial Catalog=DeliveryDb;User ID=SA;Password=SenhaBd@123"
+      SqlServerContainerConnection: "Server=mssql-server;Initial Catalog=DeliveryDb;User ID=SA;Password=SenhaBd@123"
     ports: 
-      - "8080:80"
+      - "8080:443"
+    depends_on:
+      - mssql-server
