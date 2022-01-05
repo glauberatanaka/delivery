@@ -2,13 +2,10 @@ using Delivery.Infrastructure.Data;
 using Delivery.Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Delivery.Api
@@ -25,7 +22,7 @@ namespace Delivery.Api
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
                 try
                 {
-                    var dbContext = services.GetRequiredService<AppDbContext>();
+                    using var dbContext = services.GetRequiredService<AppDbContext>();
                     await AppDbContextSeed.SeedAsync(dbContext, loggerFactory);
 
                     var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
